@@ -1,4 +1,4 @@
-package org.example.tictactoe;
+package org.example.ticktacktoe;
 
 import javax.swing.*;
 import java.awt.*;

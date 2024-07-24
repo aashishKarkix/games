@@ -1,7 +1,8 @@
-package org.example.tictactoe;
+package org.example.ticktacktoe;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Optional;
 import java.util.Random;
 
 public class GameManager {
@@ -9,6 +10,7 @@ public class GameManager {
     private final ScoreBoard scoreBoard;
     private boolean playerX = true;
     private boolean playWithCPU = false;
+    private boolean isPlayerXStarting = true;
     private String difficulty = "Easy";
     private String playerXName = "Player X";
     private String playerOName = "Player O";
@@ -43,33 +45,61 @@ public class GameManager {
 
     public void chooseMode() {
         String[] options = {"Play with Human", "Play with CPU"};
+        ImageIcon icon = new ImageIcon("src/main/java/org/example/ticktacktoe/images/ticktacktoe.png");
+        Image image = icon.getImage();
+        Image img = image.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
+        icon = new ImageIcon(img);
         int response = JOptionPane.showOptionDialog(
-                null,
-                "Choose an option:",
-                "Tic-Tac-Toe",
-                JOptionPane.DEFAULT_OPTION,
-                JOptionPane.INFORMATION_MESSAGE,
-                null,
-                options,
-                options[0]);
-
+            null,
+            "Choose an option:",
+            "Tic-Tac-Toe",
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.INFORMATION_MESSAGE,
+            icon,
+            options,
+            options[0]);
         playWithCPU = response == 1;
-
         if (playWithCPU) {
             String[] difficultyOptions = {"Easy", "Medium", "Hard"};
+            icon = new ImageIcon("src/main/java/org/example/ticktacktoe/images/robot.png");
+            image = icon.getImage();
+            img = image.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
+            icon = new ImageIcon(img);
             difficulty = (String) JOptionPane.showInputDialog(
-                    null,
-                    "Select difficulty level:",
-                    "Difficulty",
-                    JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    difficultyOptions,
-                    difficultyOptions[0]);
+                null,
+                "Select difficulty level:",
+                "Difficulty",
+                JOptionPane.QUESTION_MESSAGE,
+                icon,
+                difficultyOptions,
+                difficultyOptions[0]
+            );
+            scoreBoard.updatePlayerNames(playerXName, playerOName);
         } else {
-            playerXName = JOptionPane.showInputDialog("Enter name for Player X:");
-            playerOName = JOptionPane.showInputDialog("Enter name for Player O:");
-            playerXName = playerXName.isEmpty() ? "Player X" : playerXName;
-            playerOName = playerOName.isEmpty() ? "Player O" : playerOName;
+            icon = new ImageIcon("src/main/java/org/example/ticktacktoe/images/robot.png");
+            image = icon.getImage();
+            img = image.getScaledInstance(100, 100, java.awt.Image.SCALE_SMOOTH);
+            icon = new ImageIcon(img);
+            playerXName = (String) JOptionPane.showInputDialog(
+                null,
+                "Enter name for Player X:",
+                "Player Name Input",
+                JOptionPane.PLAIN_MESSAGE,
+                icon,
+                null,
+                "Player X"
+            );
+            playerOName = (String) JOptionPane.showInputDialog(
+                null,
+                "Enter name for Player O:",
+                "Player Name Input",
+                JOptionPane.PLAIN_MESSAGE,
+                icon,
+                null,
+                "Player O"
+            );
+            playerXName = Optional.ofNullable(playerXName).orElse("Player X");
+            playerOName = Optional.ofNullable(playerOName).orElse("Player O");
             scoreBoard.updatePlayerNames(playerXName, playerOName);
         }
         resetBoard();
@@ -220,6 +250,11 @@ public class GameManager {
         for (JButton button : buttons) {
             button.setText("");
         }
-        playerX = true;
+        isPlayerXStarting = !isPlayerXStarting;
+        playerX = isPlayerXStarting;
+
+        if (playWithCPU && !playerX) {
+            cpuMove();
+        }
     }
 }
