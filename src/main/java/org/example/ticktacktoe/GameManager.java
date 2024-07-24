@@ -31,7 +31,7 @@ public class GameManager {
                 buttonClicked.setForeground(Color.RED);
             } else {
                 buttonClicked.setText("O");
-                buttonClicked.setForeground(Color.BLUE);
+                buttonClicked.setForeground(Color.BLACK);
             }
             playerX = !playerX;
             checkForWin();
@@ -113,7 +113,7 @@ public class GameManager {
             default -> throw new IllegalStateException("Unexpected value: " + difficulty);
         };
         buttons[move].setText("O");
-        buttons[move].setForeground(Color.BLUE);
+        buttons[move].setForeground(Color.BLACK);
         playerX = true;
     }
 
@@ -252,6 +252,9 @@ public class GameManager {
         }
         isPlayerXStarting = !isPlayerXStarting;
         playerX = isPlayerXStarting;
+
+        String currentPlayer = playerX ? "Player X" : "Player O";
+        JOptionPane.showMessageDialog(null, currentPlayer + "'s turn", "Turn Information", JOptionPane.INFORMATION_MESSAGE);
 
         if (playWithCPU && !playerX) {
             cpuMove();
